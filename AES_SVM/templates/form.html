@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+</script>
+
+<head>
+    <title>Essay Predictor</title>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <script>
+        function check() {
+            var d = $('#data').val();
+            if (d.length < 150) {
+                alert("Please lengthen this text to 150 characters or more");
+                return false;
+            }
+            else{
+            var da = [{ 'essay': d }];
+            var a = JSON.stringify(da);}
+
+
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/predict",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: a,
+                success: function (getdata) {
+                    $('#predict').val(getdata.prediction);
+                    $('#char_count').val(getdata.charcount);
+                    $('#word_count').val(getdata.wordcount);
+                    $('#sent_count').val(getdata.sentcount);
+                    $('#avg_word_len').val(getdata.avglen);
+                    //$('#lemma_count').val(getdata.lemmacount);
+                    $('#spell_err_count').val(getdata.spell);
+                    $('#punctuation_count').val(getdata.punctuation);
+                    $('#noun_count').val(getdata.nouncount);
+                    $('#adj_count').val(getdata.adjcount);
+                    $('#verb_count').val(getdata.verbcount);
+                    $('#adv_count').val(getdata.advcount);
+                    $('#pronoun_count').val(getdata.pronouncount);
+                    $('#preposition_count').val(getdata.preposition);
+                    $('#errors').html(getdata.matches);
+                    $('#gram').val(getdata.grammar);
+                },
+            });
+        }
+        
+    </script>
+</head>
+
+<body style = "background-color:lightblue; font-size: 14pt">
+        <header>
+            <h1 style = "color: darkblue;" align="center">Automated Essay Score Predictor</h1>  
+        </header>
+        <hr>
+        <table>
+            
+            <tr><td>
+            <table cellspacing="10px" cellpadding="10px">
+                <tr>
+                    <td> Prompt : </td>
+                    {% for value in random_prompt %}
+                        <td> {{ value }} </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td align="center">Enter Essay</td>
+                    <td align="center"><textarea rows="15" cols="100" name="data" id="data"></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center"><button style = "background-color: white;
+                    color: black; font-size: 16px; padding: 12px 28px;
+                    border: 2px solid black; border-radius: 8px;" id="call" onclick="check()">SUBMIT</button></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label id="errors" style="color: brown; font: bold"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea cols="100" rows="4" name="gram" id="gram" style="overflow-y:scroll;" disabled="disabled">
+                        No Grammatical Errors for now!</textarea>
+                    </td>
+                </tr>
+            </table> </td> 
+            <td>
+            <table>
+                <tr>
+                    <th colspan="2">Score Details</th>
+                </tr>
+                <tr>
+                    <td align="right">Character Count</td>
+                    <td align="center"><input type="text" id="char_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Word Count</td>
+                    <td align="center"><input type="text" id="word_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Sentence Count</td>
+                    <td align="center"><input type="text" id="sent_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Average Word Length</td>
+                    <td align="center"><input type="text" id="avg_word_len" disabled="disabled"></td>
+                </tr>
+                <!--<tr>
+                    <td align="right">Lemma Count</td>
+                    <td align="center"><input type="text" id="lemma_count" disabled="disabled"></td>
+                </tr>-->
+                <tr>
+                    <td align="right">Spelling Error Count</td>
+                    <td align="center"><input type="text" id="spell_err_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Punctuation Count</td>
+                    <td align="center"><input type="text" id="punctuation_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Noun Count</td>
+                    <td align="center"><input type="text" id="noun_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Adjective Count</td>
+                    <td align="center"><input type="text" id="adj_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Verb Count</td>
+                    <td align="center"><input type="text" id="verb_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Adverb Count</td>
+                    <td align="center"><input type="text" id="adv_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Pronoun Count</td>
+                    <td align="center"><input type="text" id="pronoun_count" disabled="disabled"></td>
+                </tr>
+                <tr>
+                    <td align="right">Preposition Count</td>
+                    <td align="center"><input type="text" id="preposition_count" disabled="disabled"></td>
+                </tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr><td></td></tr>
+                <tr>
+                    <tr>
+                        <td align="center" style="font-weight: bold">Final Prediction</td>
+                        <td><input type="text" id="predict" disabled="disabled"></td>
+                    </tr>
+                </tr>
+            </table> </td> </tr>
+        </table>
+</body>
+</html>
